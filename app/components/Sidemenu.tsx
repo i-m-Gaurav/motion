@@ -13,16 +13,18 @@ const Sidemenu = () => {
   return (
     <>
       <div className="w-64 h-screen bg-zinc-900 text-white p-2">
-        <div>
-            <Button className="cursor-pointer w-full flex justify-start mb-1  px-2 py-1  bg-neutral-800 rounded hover:bg-neutral-700 text-center"><HomeIcon/><span>Home</span></Button>
-        </div>
-        <div>
+        <div className="flex flex-col gap-1">
+          <Button className="w-full justify-start bg-neutral-800 hover:bg-neutral-700 text-white">
+            <HomeIcon />
+            <span>Home</span>
+          </Button>
+
           <Dialog>
             <DialogTrigger asChild>
-              <div className="cursor-pointer w-full flex  px-2 py-1  bg-neutral-800 rounded hover:bg-neutral-700 text-center">
-                <SearchIcon/> <span className="px-2">Search</span>
-              </div>
-              
+              <Button className="w-full justify-start bg-neutral-800 hover:bg-neutral-700 text-white">
+                <SearchIcon />
+                <span>Search</span>
+              </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
