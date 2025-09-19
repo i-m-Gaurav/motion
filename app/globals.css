@@ -122,3 +122,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+/* Remove focus outline/ring on TipTap editor */
+.ProseMirror,
+.ProseMirror:focus,
+.ProseMirror-focused {
+  outline: none !important;
+  box-shadow: none !important;
+}
