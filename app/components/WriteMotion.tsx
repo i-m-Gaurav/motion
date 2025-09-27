@@ -32,7 +32,7 @@ const WriteMotion = () => {
 
 
   return (
-    <div className="flex w-full min-h-screen flex-col items-center ">
+    <div className="flex bg-[#191919] text-white w-full min-h-screen flex-col items-center  ">
       <div className="w-full mt-20 max-w-md px-4 py-10 flex flex-col items-center gap-6">
         {/* <h1 className="text-white text-3xl font-bold text-center">
           Write New Motion
@@ -46,7 +46,7 @@ const WriteMotion = () => {
           <File />
           <span>Create New</span>
         </Button> */}
-        <div className="flex justify-center items-center w-6xl  ">
+        <div className="flex justify-center items-center w-6xl">
           <TipTap/>
         </div>
       </div>
