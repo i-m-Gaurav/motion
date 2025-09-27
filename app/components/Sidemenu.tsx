@@ -69,12 +69,13 @@ const Sidemenu: React.FC<SidemenuProps> = ({ pages, onSelect, onNewPage }) => {
           {pages.map((p) => (
             <div
               key={p._id || p.title}
-              className="rounded-md cursor-pointer hover:bg-neutral-700 px-3 "
+              className="rounded-md cursor-pointer  hover:bg-neutral-700 px-3 "
               onClick={() => onSelect(p)}
             >
-             <div className="flex justify-start items-center gap-2 py-1">
+             <div className="flex justify-start text-ellipsis items-center gap-2 py-1">
                <FileText size={17}/>
-              {p.title || "Untitled"}
+               <span className="text-ellipsis truncate w-40 overflow-hidden">{p.title || "Untitled"}</span>
+              
               </div>
             </div>
           ))}
