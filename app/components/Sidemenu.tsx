@@ -1,59 +1,94 @@
-'use client'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { HomeIcon, SearchIcon } from "lucide-react";
+'use client';
+
 import { Button } from "@/components/ui/button";
-import SignIn from "./sign-in";
+import { FileText, HomeIcon, LogOut, SearchIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
+import axios from "axios";
+import SignIn from "./sign-in";
+import { Page } from "../types/types";
+import SignOut from "./sign-out";
 
+interface SidemenuProps {
+  pages: Page[];
+  onSelect: (page: Page) => void;
+  onNewPage: (page: Page) => void;  // 👈 new prop
+}
 
-const Sidemenu = () => {
+const Sidemenu: React.FC<SidemenuProps> = ({ pages, onSelect, onNewPage }) => {
+  const { data: session } = useSession();
 
-  const { data : session} = useSession()
+  const handleNewPage = async () => {
+    if (!session?.user?.email) return;
+
+    const newPage: Page = {
+      _id: "",
+      title: "Untitled",
+      content: "<p>Start writing...</p>",
+    };
+
+    try {
+      const { data } = await axios.post("/api/newPage", {
+        title: newPage.title,
+        content: newPage.content,
+        email: session.user.email,
+      });
+
+      const savedPage = data.page;
+      onNewPage(savedPage);
+
+      // onSelect(savedPage);
+    } catch (err) {
+      console.error("Error creating new page:", err);
+    }
+  };
 
   return (
-    <>
-      <div className="w-64 flex flex-col justify-between fixed h-screen bg-[#202020] text-white p-2">
-        <div className="flex flex-col gap-1">
-          <Button className="w-full justify-start bg-neutral-800 hover:bg-neutral-700 text-white">
-            <HomeIcon />
-            <span>Home</span>
-          </Button>
+    <div className="w-64 flex flex-col justify-between fixed h-screen bg-[#202020] text-white p-2">
+      <div className="flex flex-col gap-2">
+        <Button className="w-full justify-start bg-neutral-800 hover:bg-neutral-700 text-white">
+          <HomeIcon />
+          <span>Home</span>
+        </Button>
 
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="w-full justify-start bg-neutral-800 hover:bg-neutral-700 text-white">
-                <SearchIcon />
-                <span>Search</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Are you absolutely sure?</DialogTitle>
-                <DialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  your account and remove your data from our servers.
-                </DialogDescription>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
-        </div>
-        <div className="w-full my-1 cursor-pointer rounded-md py-1 justify-start bg-neutral-800 hover:bg-neutral-700 text-white">
-          {/* signup button at the bottom */}
+        <Button onClick={handleNewPage} className="w-full justify-start bg-neutral-800 hover:bg-neutral-700 text-white">
+          <span>New Page</span>
+        </Button>
 
-          {/* <SignIn/> */}
+        {/* <div className="flex items-center gap-2 mt-4 px-1">
+          <SearchIcon />
+          <input
+            type="text"
+            placeholder="Search..."
+            className="bg-transparent border-b border-gray-600 focus:outline-none flex-1 text-white"
+          />
+        </div> */}
 
-          {session ? <span>{session?.user?.name}</span> :(<SignIn/>)}
-         
+        <span className="text-sm mt-4 text-slate-400">Personal</span>
+
+        <div className="flex flex-col gap-1 mt-2 max-h-98 scrollbar  overflow-y-auto">
+          {pages.map((p) => (
+            <div
+              key={p._id || p.title}
+              className="rounded-md cursor-pointer hover:bg-neutral-700 px-3 "
+              onClick={() => onSelect(p)}
+            >
+             <div className="flex justify-start items-center gap-2 py-1">
+               <FileText size={17}/>
+              {p.title || "Untitled"}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-    </>
+
+      <div className="w-full my-1 cursor-pointer rounded-md py-1 justify-start   text-white">
+        {session ? <div className="flex items-center justify-between gap-1 px-2 ">
+          <span className="px-2 bg-neutral-800 w-full rounded-sm py-1 hover:bg-neutral-700">{session?.user?.name}</span>
+          {/* <span className="px-2 hover:bg-neutral-700 rounded-sm py-1"><LogOut/></span> */}
+         <SignOut/>
+        </div> : <SignIn />}
+      </div>
+    </div>
   );
 };
 
