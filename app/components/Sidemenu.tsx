@@ -1,3 +1,4 @@
+'use client'
 import {
   Dialog,
   DialogContent,
@@ -8,11 +9,18 @@ import {
 } from "@/components/ui/dialog";
 import { HomeIcon, SearchIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import SignIn from "./sign-in";
+import { useSession } from "next-auth/react";
+
 
 const Sidemenu = () => {
+
+  const { data : session} = useSession()
+
+  console.log("What is in the sesison bro",session);
   return (
     <>
-      <div className="w-64 fixed h-screen bg-[#202020] text-white p-2">
+      <div className="w-64 flex flex-col justify-between fixed h-screen bg-[#202020] text-white p-2">
         <div className="flex flex-col gap-1">
           <Button className="w-full justify-start bg-neutral-800 hover:bg-neutral-700 text-white">
             <HomeIcon />
@@ -36,6 +44,14 @@ const Sidemenu = () => {
               </DialogHeader>
             </DialogContent>
           </Dialog>
+        </div>
+        <div className="w-full my-1 cursor-pointer rounded-md py-1 justify-start bg-neutral-800 hover:bg-neutral-700 text-white">
+          {/* signup button at the bottom */}
+
+          {/* <SignIn/> */}
+
+          {session ? <span>{session?.user?.name}</span> :(<SignIn/>)}
+         
         </div>
       </div>
     </>

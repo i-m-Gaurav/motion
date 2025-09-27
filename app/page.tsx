@@ -1,10 +1,12 @@
+import { SessionProvider } from "next-auth/react";
 import Sidemenu from "./components/Sidemenu";
 import TipTap from "./components/TipTap";
 
 
 export default function Home() {
   return (
-    <div className="flex">
+   <SessionProvider>
+     <div className="flex">
      
      <div className="bg-red-500 ">
       <Sidemenu />
@@ -16,5 +18,6 @@ export default function Home() {
      </div>
 
     </div>
+   </SessionProvider>
   );
 }
