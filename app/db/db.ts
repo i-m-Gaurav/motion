@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const connect = () => {
-    mongoose.connect("mongodb://localhost:27017/motionDB");
+    mongoose.connect(process.env.MONGO_URI || "" );
     console.log("Connected to MongoDB");
 }
 

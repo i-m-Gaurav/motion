@@ -17,7 +17,6 @@ const Sidemenu = () => {
 
   const { data : session} = useSession()
 
-  console.log("What is in the sesison bro",session);
   return (
     <>
       <div className="w-64 flex flex-col justify-between fixed h-screen bg-[#202020] text-white p-2">
