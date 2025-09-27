@@ -3,7 +3,7 @@ import Motion from "../../models/motion";
 import connect from "../../db/db";
 import User from "../../models/user";
 
-export async function POST(req: Request, res: NextResponse) {
+export async function POST(req: Request) {
   try {
     connect();
    const { motionText, email } = await req.json();

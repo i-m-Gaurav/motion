@@ -3,7 +3,7 @@ import connect from "@/app/db/db";
 import User from "@/app/models/user";
 import Motion from "@/app/models/motion";
 
-export async function POST(req: Request, res: NextResponse) {
+export async function POST(req: Request) {
   try {
     connect();
     const { email } = await req.json();
