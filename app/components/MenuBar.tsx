@@ -17,8 +17,11 @@ import {
   Code,
   Quote,
   Strikethrough,
+  Heading1,
+  Heading2,
+  Heading3,
+  ListTodo,
 } from "lucide-react";
-import { StrikeIcon } from "@/components/tiptap-icons/strike-icon";
 
 export function MenuBar({ editor }: { editor: Editor }) {
   const [showTextMenu, setShowTextMenu] = useState(false);
@@ -43,7 +46,9 @@ export function MenuBar({ editor }: { editor: Editor }) {
         canUndo: ctx.editor.can().chain().undo().run() ?? false,
         canRedo: ctx.editor.can().chain().redo().run() ?? false,
         isStrike:ctx.editor.isActive("stike")?? false,
-        canStrike : ctx.editor.can().chain().toggleStrike().run() ?? false
+        canStrike : ctx.editor.can().chain().toggleStrike().run() ?? false,
+        isTaskList: ctx.editor.isActive("taskList") ?? false,
+        canTaskList: ctx.editor.can().chain().toggleTaskList().run() ?? false,
       };
     },
   });
@@ -97,6 +102,15 @@ export function MenuBar({ editor }: { editor: Editor }) {
           <Italic size={16} />
         </button>
 
+        <button
+          onClick={() => editor.chain().focus().toggleTaskList().run()}
+          className={`p-1 rounded hover:bg-neutral-700 ${
+            editorState.isTaskList ? "bg-neutral-700" : ""
+          }`}
+        >
+          <ListTodo size={16}/>
+        </button>
+
         {/* Text Dropdown */}
         <div className="relative">
           <button
@@ -119,7 +133,9 @@ export function MenuBar({ editor }: { editor: Editor }) {
                     editorState.isHeading1 ? "bg-neutral-700" : ""
                   }`}
                 >
-                  H1
+                  <div className="flex items-center gap-2">
+                    <Heading1/> <span>Heading 1</span>
+                  </div>
                 </button>
                 <button
                   onClick={() =>
@@ -129,7 +145,9 @@ export function MenuBar({ editor }: { editor: Editor }) {
                     editorState.isHeading2 ? "bg-neutral-700" : ""
                   }`}
                 >
-                  H2
+                   <div className="flex items-center gap-2">
+                    <Heading2/> <span>Heading 2</span>
+                  </div>
                 </button>
                 <button
                   onClick={() =>
@@ -139,7 +157,9 @@ export function MenuBar({ editor }: { editor: Editor }) {
                     editorState.isHeading3 ? "bg-neutral-700" : ""
                   }`}
                 >
-                  H3
+                   <div className="flex items-center gap-2">
+                    <Heading3/> <span>Heading 3</span>
+                  </div>
                 </button>
                 <button
                   onClick={() => editor.chain().focus().toggleCodeBlock().run()}

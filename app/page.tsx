@@ -48,7 +48,7 @@ export default function Home() {
         </div>
         {/* Main content area */}
         <div className="flex-1 bg-[#191919] flex items-start py-40 justify-center min-w-0 h-screen overflow-y-auto">
-          <div className="w-full max-w-3xl px-4 py-8 text-3xl font-bold text-white">
+          <div className="w-full max-w-3xl px-4 py-8 text-3xl  text-white">
             {selectedPage && <TipTap page={selectedPage} onSave={handleSave} />}
           </div>
         </div>

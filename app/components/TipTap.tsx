@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import StarterKit from "@tiptap/starter-kit";
 import { MenuBar } from "./MenuBar";
 import { Placeholder } from "@tiptap/extensions";
+import { TaskItem, TaskList } from '@tiptap/extension-list'
 import axios from "axios";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -30,6 +31,10 @@ const [editorEnabled, setEditorEnabled] = useState(false);
       StarterKit,
       Placeholder.configure({
         placeholder: "Write your motion here...",
+      }),
+      TaskList,
+      TaskItem.configure({
+        nested: true,
       }),
     ],
     content: page.content,
@@ -105,7 +110,7 @@ useEffect(() => {
       <div>
         <input type="text" value ={title} onChange={(e) => setTitle(e.target.value)} className="text-2xl font-bold w-full p-2 mb-4 bg-transparent border-b border-gray-600 text-white focus:outline-none" />
         {!title && (
-          <span className="text-red-500">Title cannot be empty</span>
+          <span className="text-white">Title cannot be empty</span>
         )}
       </div>
       <div className=" max-w-3xl mx-auto p-4 ">
