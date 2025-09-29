@@ -1,7 +1,6 @@
 import connect from "../../db/db";
 import { NextResponse } from "next/server";
 import User from "../../models/user";
-import Motion from "../../models/motion";
 import Page from "../../models/page";
 export async function POST(req: Request) {
 

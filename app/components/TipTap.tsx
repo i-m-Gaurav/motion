@@ -54,7 +54,8 @@ useEffect(() => {
   setTitle(page.title || "");
   if (editor) {
     editor.commands.setContent(page.content || "");
-    editor.setEditable((page.title || "").trim().length > 0);
+    const shouldEnable = !!title.trim();
+    editor.setEditable(shouldEnable);
   }
 }, [page, editor]);
 // run whenever a new page is passed
@@ -108,10 +109,8 @@ useEffect(() => {
 
 
       <div>
-        <input type="text" value ={title} onChange={(e) => setTitle(e.target.value)} className="text-2xl font-bold w-full p-2 mb-4 bg-transparent border-b border-gray-600 text-white focus:outline-none" />
-        {!title && (
-          <span className="text-white">Title cannot be empty</span>
-        )}
+        <input type="text" value ={title} placeholder="New" onChange={(e) => setTitle(e.target.value)} className="text-2xl font-bold w-full p-2 mb-4 bg-transparent border-b border-gray-600 text-white focus:outline-none" />
+        
       </div>
       <div className=" max-w-3xl mx-auto p-4 ">
         <EditorContent editor={editor} className="tiptap-content" />

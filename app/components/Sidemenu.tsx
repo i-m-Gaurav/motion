@@ -1,17 +1,18 @@
-'use client';
+"use client";
 
 import { Button } from "@/components/ui/button";
-import { FileText, HomeIcon, LogOut, SearchIcon } from "lucide-react";
+import { FileText, HomeIcon, LogOut, SearchIcon, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import SignIn from "./sign-in";
 import { Page } from "../types/types";
 import SignOut from "./sign-out";
+import { useEffect } from "react";
 
 interface SidemenuProps {
   pages: Page[];
   onSelect: (page: Page) => void;
-  onNewPage: (page: Page) => void;  // 👈 new prop
+  onNewPage: (page: Page) => void; // 👈 new prop
 }
 
 const Sidemenu: React.FC<SidemenuProps> = ({ pages, onSelect, onNewPage }) => {
@@ -42,6 +43,14 @@ const Sidemenu: React.FC<SidemenuProps> = ({ pages, onSelect, onNewPage }) => {
     }
   };
 
+  const handleDelete = async (pageId: string | undefined) => {
+    try {
+      await axios.post(`/api/deletePage?pageId=${pageId}`);
+    } catch (error) {
+      console.error("Error deleting page:", error);
+    }
+  };
+
   return (
     <div className="w-64 flex flex-col justify-between fixed h-screen bg-[#202020] text-white p-2">
       <div className="flex flex-col gap-2">
@@ -50,7 +59,10 @@ const Sidemenu: React.FC<SidemenuProps> = ({ pages, onSelect, onNewPage }) => {
           <span>Home</span>
         </Button>
 
-        <Button onClick={handleNewPage} className="w-full justify-start bg-neutral-800 hover:bg-neutral-700 text-white">
+        <Button
+          onClick={handleNewPage}
+          className="w-full justify-start bg-neutral-800 hover:bg-neutral-700 text-white"
+        >
           <span>New Page</span>
         </Button>
 
@@ -72,10 +84,20 @@ const Sidemenu: React.FC<SidemenuProps> = ({ pages, onSelect, onNewPage }) => {
               className="rounded-md cursor-pointer  hover:bg-neutral-700 px-3 "
               onClick={() => onSelect(p)}
             >
-             <div className="flex justify-start text-ellipsis items-center gap-2 py-1">
-               <FileText size={17}/>
-               <span className="text-ellipsis truncate w-40 overflow-hidden">{p.title || "Untitled"}</span>
-              
+              <div className="flex group justify-start text-ellipsis items-center gap-2 py-1">
+                <FileText size={17} />
+                <span className="text-ellipsis truncate w-40 overflow-hidden">
+                  {p.title || "Untitled"}
+                </span>
+                <button
+                  className="hidden group-hover:flex"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(p._id);
+                  }}
+                >
+                  <Trash2 size={14} />
+                </button>
               </div>
             </div>
           ))}
@@ -83,11 +105,17 @@ const Sidemenu: React.FC<SidemenuProps> = ({ pages, onSelect, onNewPage }) => {
       </div>
 
       <div className="w-full my-1 cursor-pointer rounded-md py-1 justify-start   text-white">
-        {session ? <div className="flex items-center justify-between gap-1 px-2 ">
-          <span className="px-2 bg-neutral-800 w-full rounded-sm py-1 hover:bg-neutral-700">{session?.user?.name}</span>
-          {/* <span className="px-2 hover:bg-neutral-700 rounded-sm py-1"><LogOut/></span> */}
-         <SignOut/>
-        </div> : <SignIn />}
+        {session ? (
+          <div className="flex items-center justify-between gap-1 px-2 ">
+            <span className="px-2 bg-neutral-800 w-full rounded-sm py-1 hover:bg-neutral-700">
+              {session?.user?.name}
+            </span>
+            {/* <span className="px-2 hover:bg-neutral-700 rounded-sm py-1"><LogOut/></span> */}
+            <SignOut />
+          </div>
+        ) : (
+          <SignIn />
+        )}
       </div>
     </div>
   );
