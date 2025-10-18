@@ -47,10 +47,11 @@ const [editorEnabled] = useState(false);
   });
 
 useEffect(() => {
-  setTitle(page.title || "");
+  const newTitle = page.title || "";
+  setTitle(newTitle);
   if (editor) {
     editor.commands.setContent(page.content || "");
-    const shouldEnable = !!title.trim();
+    const shouldEnable = !!newTitle.trim();
     editor.setEditable(shouldEnable);
   }
 }, [page, editor]);

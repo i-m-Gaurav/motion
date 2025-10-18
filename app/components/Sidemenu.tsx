@@ -1,13 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { FileText, HomeIcon, LogOut, SearchIcon, Trash2 } from "lucide-react";
+import { FileText, HomeIcon, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import SignIn from "./sign-in";
 import { Page } from "../types/types";
 import SignOut from "./sign-out";
-import { useEffect } from "react";
 
 interface SidemenuProps {
   pages: Page[];
