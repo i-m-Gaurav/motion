@@ -4,7 +4,6 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import { useSession } from "next-auth/react";
 import StarterKit from "@tiptap/starter-kit";
 import { MenuBar } from "./MenuBar";
-import { Placeholder } from "@tiptap/extensions";
 import { TaskItem, TaskList } from '@tiptap/extension-list'
 import axios from "axios";
 
@@ -23,15 +22,12 @@ interface TipTapProps {
 
 const TipTap: React.FC<TipTapProps> = ({ page,  onSave }) => {
 const [title,setTitle] = useState(page.title || "");
-const [editorEnabled, setEditorEnabled] = useState(false);
+const [editorEnabled] = useState(false);
 
 
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Placeholder.configure({
-        placeholder: "Write your motion here...",
-      }),
       TaskList,
       TaskItem.configure({
         nested: true,
