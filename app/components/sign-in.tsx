@@ -7,7 +7,7 @@ export default function SignIn() {
   const [loading, setLoading] = React.useState(false);
   return (
     <button
-      className="cursor-pointer bg-neutral-800 py-2 flex items-center justify-center w-full mx-auto py-1 rounded"
+      className="cursor-pointer hover:bg-neutral-700 bg-neutral-800 py-2 flex items-center justify-center w-full mx-auto py-1 rounded"
       onClick={ async () => {
         try {
           setLoading(true);
@@ -21,7 +21,7 @@ export default function SignIn() {
       }}
     >
       {loading ?   <div className="w-4 h-4 border-gray-400 border-2 border-t-transparent rounded-full animate-spin"></div>
- : <p className="text-sm">Login With Google</p>}
+ : <p className="text-sm ">Login With Google</p>}
     </button>
   );
 }

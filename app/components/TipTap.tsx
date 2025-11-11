@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import StarterKit from "@tiptap/starter-kit";
 import { MenuBar } from "./MenuBar";
 import { TaskItem, TaskList } from "@tiptap/extension-list";
+import Image from "@tiptap/extension-image";
 import axios from "axios";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -27,10 +28,15 @@ const TipTap: React.FC<TipTapProps> = ({ page, onSave }) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
+      Image.configure({
+        inline: false,
+        allowBase64: true,
+      }),
       TaskList,
       TaskItem.configure({
         nested: true,
       }),
+      Image,
     ],
     content: page.content,
     onUpdate: ({ editor }) => {

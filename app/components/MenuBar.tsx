@@ -19,12 +19,33 @@ import {
   Strikethrough,
   Heading1,
   Heading2,
+  ImagePlus,
   Heading3,
   ListTodo,
 } from "lucide-react";
 
 export function MenuBar({ editor }: { editor: Editor }) {
   const [showTextMenu, setShowTextMenu] = useState(false);
+  // const url = window.prompt("Enter image URL");
+
+  const wasSlashTyped = (ed: Editor) => {
+    const { state } = ed;
+    const { from, empty } = state.selection;
+    if (!empty || from === 0) return false;
+    const charBefore = state.doc.textBetween(from - 1, from);
+    return charBefore === "/";
+  };
+
+  // Helper: remove slash before executing a command
+  const removeSlashIfPresent = (ed: Editor) => {
+    const { state } = ed;
+    const { from, empty } = state.selection;
+    if (!empty || from === 0) return;
+    const charBefore = state.doc.textBetween(from - 1, from);
+    if (charBefore === "/") {
+      ed.chain().focus().deleteRange({ from: from - 1, to: from }).run();
+    }
+  };
 
   const editorState = useEditorState({
     editor,
@@ -45,7 +66,7 @@ export function MenuBar({ editor }: { editor: Editor }) {
         isOrderedList: ctx.editor.isActive("orderedList") ?? false,
         canUndo: ctx.editor.can().chain().undo().run() ?? false,
         canRedo: ctx.editor.can().chain().redo().run() ?? false,
-        isStrike:ctx.editor.isActive("stike")?? false,
+        isStrike:ctx.editor.isActive("strike")?? false,
         canStrike : ctx.editor.can().chain().toggleStrike().run() ?? false,
         isTaskList: ctx.editor.isActive("taskList") ?? false,
         canTaskList: ctx.editor.can().chain().toggleTaskList().run() ?? false,
@@ -58,57 +79,78 @@ export function MenuBar({ editor }: { editor: Editor }) {
       <BubbleMenu
         editor={editor}
         className="flex items-center gap-1 bg-neutral-900 text-white px-2 py-1 rounded-lg shadow-lg border border-neutral-700"
-        
+        // Show when the cursor is right after "/"
+        shouldShow={({ editor }) => wasSlashTyped(editor)}
       >
+        <button
+          onClick={() => {
+            const url = window.prompt("Enter image URL");
+            if (url) {
+              removeSlashIfPresent(editor);
+              editor.chain().focus().setImage({ src: url }).run();
+            }
+          }}
+          className="p-1 rounded hover:bg-neutral-700"
+        >
+          <ImagePlus size = {16}/>
+        </button>
+
         {/* Bold */}
         <button
-          onClick={() => editor.chain().focus().toggleBold().run()}
+          onClick={() => {
+            removeSlashIfPresent(editor);
+            editor.chain().focus().toggleBold().run();
+          }}
           disabled={!editorState.canBold}
-          className={`p-1 rounded hover:bg-neutral-700 ${
-            editorState.isBold ? "bg-neutral-700" : ""
-          }`}
+          className={`p-1 rounded hover:bg-neutral-700 ${editorState.isBold ? "bg-neutral-700" : ""}`}
         >
           <Bold size={16} />
         </button>
 
         {/* Underline */}
         <button
-          onClick={() => editor.chain().focus().toggleUnderline?.().run()}
+          onClick={() => {
+            removeSlashIfPresent(editor);
+            editor.chain().focus().toggleUnderline?.().run();
+          }}
           disabled={!editorState.canUnderline}
-          className={`p-1 rounded hover:bg-neutral-700 ${
-            editorState.isUnderline ? "bg-neutral-700" : ""
-          }`}
+          className={`p-1 rounded hover:bg-neutral-700 ${editorState.isUnderline ? "bg-neutral-700" : ""}`}
         >
           <Underline size={16} />
         </button>
+
+        {/* Strike */}
         <button
-          onClick={() => editor.chain().focus().toggleStrike().run()}
+          onClick={() => {
+            removeSlashIfPresent(editor);
+            editor.chain().focus().toggleStrike().run();
+          }}
           disabled={!editorState.canStrike}
-          className={`p-1 rounded hover:bg-neutral-700 ${
-            editorState.isStrike ? "bg-neutral-700" : ""
-          }`}
+          className={`p-1 rounded hover:bg-neutral-700 ${editorState.isStrike ? "bg-neutral-700" : ""}`}
         >
           <Strikethrough size={16} />
         </button>
 
         {/* Italic */}
         <button
-          onClick={() => editor.chain().focus().toggleItalic().run()}
+          onClick={() => {
+            removeSlashIfPresent(editor);
+            editor.chain().focus().toggleItalic().run();
+          }}
           disabled={!editorState.canItalic}
-          className={`p-1 rounded hover:bg-neutral-700 ${
-            editorState.isItalic ? "bg-neutral-700" : ""
-          }`}
+          className={`p-1 rounded hover:bg-neutral-700 ${editorState.isItalic ? "bg-neutral-700" : ""}`}
         >
           <Italic size={16} />
         </button>
 
         <button
-          onClick={() => editor.chain().focus().toggleTaskList().run()}
-          className={`p-1 rounded hover:bg-neutral-700 ${
-            editorState.isTaskList ? "bg-neutral-700" : ""
-          }`}
+          onClick={() => {
+            removeSlashIfPresent(editor);
+            editor.chain().focus().toggleTaskList().run();
+          }}
+          className={`p-1 rounded hover:bg-neutral-700 ${editorState.isTaskList ? "bg-neutral-700" : ""}`}
         >
-          <ListTodo size={16}/>
+          <ListTodo size={16} />
         </button>
 
         {/* Text Dropdown */}
@@ -123,59 +165,60 @@ export function MenuBar({ editor }: { editor: Editor }) {
             <div className="absolute top-full left-0 mt-1 w-36 bg-neutral-900 border border-neutral-700 rounded-lg shadow-lg z-50">
               <div className="flex flex-col">
                 <button
-                  onClick={() =>
-                   {
-                     editor.chain().focus().toggleHeading({ level: 1 }).run();
-                     setShowTextMenu(false);
-                   }
-                  }
-                  className={`px-3 py-1 text-sm text-left hover:bg-neutral-700 ${
-                    editorState.isHeading1 ? "bg-neutral-700" : ""
-                  }`}
+                  onClick={() => {
+                    removeSlashIfPresent(editor);
+                    editor.chain().focus().toggleHeading({ level: 1 }).run();
+                    setShowTextMenu(false);
+                  }}
+                  className={`px-3 py-1 text-sm text-left hover:bg-neutral-700 ${editorState.isHeading1 ? "bg-neutral-700" : ""}`}
                 >
                   <div className="flex items-center gap-2">
-                    <Heading1/> <span>Heading 1</span>
+                    <Heading1 /> <span>Heading 1</span>
                   </div>
                 </button>
                 <button
-                  onClick={() =>
-                    editor.chain().focus().toggleHeading({ level: 2 }).run()
-                  }
-                  className={`px-3 py-1 text-sm text-left hover:bg-neutral-700 ${
-                    editorState.isHeading2 ? "bg-neutral-700" : ""
-                  }`}
+                  onClick={() => {
+                    removeSlashIfPresent(editor);
+                    editor.chain().focus().toggleHeading({ level: 2 }).run();
+                    setShowTextMenu(false);
+                  }}
+                  className={`px-3 py-1 text-sm text-left hover:bg-neutral-700 ${editorState.isHeading2 ? "bg-neutral-700" : ""}`}
                 >
-                   <div className="flex items-center gap-2">
-                    <Heading2/> <span>Heading 2</span>
+                  <div className="flex items-center gap-2">
+                    <Heading2 /> <span>Heading 2</span>
                   </div>
                 </button>
                 <button
-                  onClick={() =>
-                    editor.chain().focus().toggleHeading({ level: 3 }).run()
-                  }
-                  className={`px-3 py-1 text-sm text-left hover:bg-neutral-700 ${
-                    editorState.isHeading3 ? "bg-neutral-700" : ""
-                  }`}
+                  onClick={() => {
+                    removeSlashIfPresent(editor);
+                    editor.chain().focus().toggleHeading({ level: 3 }).run();
+                    setShowTextMenu(false);
+                  }}
+                  className={`px-3 py-1 text-sm text-left hover:bg-neutral-700 ${editorState.isHeading3 ? "bg-neutral-700" : ""}`}
                 >
-                   <div className="flex items-center gap-2">
-                    <Heading3/> <span>Heading 3</span>
+                  <div className="flex items-center gap-2">
+                    <Heading3 /> <span>Heading 3</span>
                   </div>
                 </button>
                 <button
-                  onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-                  className={`px-3 py-1 text-sm text-left hover:bg-neutral-700 ${
-                    editorState.isCodeBlock ? "bg-neutral-700" : ""
-                  }`}
+                  onClick={() => {
+                    removeSlashIfPresent(editor);
+                    editor.chain().focus().toggleCodeBlock().run();
+                    setShowTextMenu(false);
+                  }}
+                  className={`px-3 py-1 text-sm text-left hover:bg-neutral-700 ${editorState.isCodeBlock ? "bg-neutral-700" : ""}`}
                 >
                   <div className="flex items-center gap-2">
                     <Code size={14} /> Code
                   </div>
                 </button>
                 <button
-                  onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                  className={`px-3 py-1 text-sm text-left hover:bg-neutral-700 ${
-                    editorState.isBlockquote ? "bg-neutral-700" : ""
-                  }`}
+                  onClick={() => {
+                    removeSlashIfPresent(editor);
+                    editor.chain().focus().toggleBlockquote().run();
+                    setShowTextMenu(false);
+                  }}
+                  className={`px-3 py-1 text-sm text-left hover:bg-neutral-700 ${editorState.isBlockquote ? "bg-neutral-700" : ""}`}
                 >
                   <div className="flex items-center gap-2">
                     <Quote size={14} /> Quote
@@ -188,20 +231,22 @@ export function MenuBar({ editor }: { editor: Editor }) {
 
         {/* Bullet list */}
         <button
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={`p-1 rounded hover:bg-neutral-700 ${
-            editorState.isBulletList ? "bg-neutral-700" : ""
-          }`}
+          onClick={() => {
+            removeSlashIfPresent(editor);
+            editor.chain().focus().toggleBulletList().run();
+          }}
+          className={`p-1 rounded hover:bg-neutral-700 ${editorState.isBulletList ? "bg-neutral-700" : ""}`}
         >
           <List size={16} />
         </button>
 
         {/* Ordered list */}
         <button
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={`p-1 rounded hover:bg-neutral-700 ${
-            editorState.isOrderedList ? "bg-neutral-700" : ""
-          }`}
+          onClick={() => {
+            removeSlashIfPresent(editor);
+            editor.chain().focus().toggleOrderedList().run();
+          }}
+          className={`p-1 rounded hover:bg-neutral-700 ${editorState.isOrderedList ? "bg-neutral-700" : ""}`}
         >
           <ListOrdered size={16} />
         </button>
