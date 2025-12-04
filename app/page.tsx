@@ -14,7 +14,11 @@ export default function Home() {
   const {data : session} = useSession();
 
  useEffect(() => {
+
+   console.log(process.env.NEXT_PUBLIC_TEST_ENV,"env message")
   if (!session?.user?.email) return; // wait for session
+
+   
 
   const fetchPages = async () => {
     try {
@@ -39,6 +43,10 @@ export default function Home() {
   return (
     
       <div className="flex h-screen min-w-0 bg-[#191919]">
+
+
+        
+        
         {/* Sidemenu with fixed width */}
         <div className=" w-64 h-full flex-shrink-0">
       <Sidemenu pages={pages} onSelect={setSelectedPage} onNewPage={(page) =>{
