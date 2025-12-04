@@ -17,7 +17,11 @@ export default function Home() {
 
    console.log(process.env.NEXT_PUBLIC_TEST_ENV,"env message")
 
-   test();
+   const hello = async () => {
+      await test();
+   }
+
+   hello();
 
   if (!session?.user?.email) return; // wait for session
 
