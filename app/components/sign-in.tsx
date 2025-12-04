@@ -10,6 +10,7 @@ export default function SignIn() {
       className="cursor-pointer hover:bg-neutral-700 bg-neutral-800 py-2 flex items-center justify-center w-full mx-auto py-1 rounded"
       onClick={ async () => {
         try {
+          
           setLoading(true);
           await signIn("google");
           

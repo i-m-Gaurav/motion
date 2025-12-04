@@ -13,15 +13,19 @@ export default function Home() {
   const [pages, setPages] = useState<Page[]>([]);
   const {data : session} = useSession();
 
+    const hello = async () => {
+    console.log("hello bro")
+       test();
+   }
+
+
  useEffect(() => {
 
    console.log(process.env.NEXT_PUBLIC_TEST_ENV,"env message")
+   
 
-   const hello = async () => {
-      await test();
-   }
+ 
 
-   hello();
 
   if (!session?.user?.email) return; // wait for session
 
@@ -51,7 +55,9 @@ export default function Home() {
     
       <div className="flex h-screen min-w-0 bg-[#191919]">
 
-
+<button onClick={hello}>
+  click this nigga
+</button>
         
         
         {/* Sidemenu with fixed width */}
