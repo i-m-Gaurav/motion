@@ -5,7 +5,6 @@ import TipTap from "./components/TipTap";
 import { useState , useEffect} from "react";
 import { Page } from "./types/types";
 import axios from 'axios';
-import {test} from "./action"
 export default function Home() {
 
 
@@ -13,25 +12,14 @@ export default function Home() {
   const [pages, setPages] = useState<Page[]>([]);
   const {data : session} = useSession();
 
-    const hello = async () => {
-    console.log("hello bro")
-      //  test();
-       const result = await test();
-       console.log(result);
-   }
 
 
  useEffect(() => {
 
-   console.log(process.env.NEXT_PUBLIC_TEST_ENV,"env message")
-   
-
- 
-
 
   if (!session?.user?.email) return; // wait for session
 
-   
+  
 
   const fetchPages = async () => {
     try {
