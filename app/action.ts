@@ -1,6 +1,6 @@
 "use server"
 
-export const test= () => {
+export const test=  async () => {
     console.log(process.env.AUTH_GOOGLE_ID, "google id");
     console.log(process.env.AUTH_GOOGLE_SECRET, "google id");
     console.log(process.env.MONGO_URI, "google id");
