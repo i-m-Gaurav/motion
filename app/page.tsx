@@ -5,7 +5,7 @@ import TipTap from "./components/TipTap";
 import { useState , useEffect} from "react";
 import { Page } from "./types/types";
 import axios from 'axios';
-
+import {test} from "./action"
 export default function Home() {
 
 
@@ -16,6 +16,9 @@ export default function Home() {
  useEffect(() => {
 
    console.log(process.env.NEXT_PUBLIC_TEST_ENV,"env message")
+
+   test();
+
   if (!session?.user?.email) return; // wait for session
 
    
