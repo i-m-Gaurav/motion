@@ -15,7 +15,9 @@ export default function Home() {
 
     const hello = async () => {
     console.log("hello bro")
-       test();
+      //  test();
+       const result = await test();
+       console.log(result);
    }
 
 
